@@ -25,6 +25,7 @@ GEM
     oj (2.0.14)
     rest-client (1.6.7)
       mime-types (>= 1.16)
+    thread (0.1.3)
     trollop (2.0)
 
 PLATFORMS
@@ -33,4 +34,5 @@ PLATFORMS
 DEPENDENCIES
   citysdk (~> 0.1.2.1)
   metoffice_datapoint (~> 0.0.2)
+  thread (~> 0.1.3)
   trollop (~> 2.0)
