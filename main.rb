@@ -12,25 +12,43 @@ MET_OFFICE_RESOLUTIONS = ['3hourly', 'daily']
 THREAD_POOL_SIZE = 16
 
 opts = Trollop::options do
+  opt(:config,
+      'Configuration JSON file',
+      :type => :string)
   opt(:datapointkey,
       'Met Office datapoint key',
-      :type => :string,
-      :required => true)
+      :type => :string)
   opt(:unitaryauthority,
       'Unitary authority, e.g. "Greater Manchester"',
-      :type => :string,
-      :required => true)
+      :type => :string)
   opt(:resolution,
       "Forecast resolution, one of #{MET_OFFICE_RESOLUTIONS.join(', ')}",
-      :type => :string,
-      :required => true)
+      :type => :string)
   opt(:output,
       'File path to output JSON to',
-      :type => :string,
-      :required => true)
+      :type => :string)
   opt(:poolsize,
       'Number of download threads in pool',
       :default => THREAD_POOL_SIZE)
+end
+
+if opts[:config]
+  configFile = opts[:config]
+  config = JSON.parse(IO.read(configFile), {symbolize_names: true})
+  opts = opts.merge(config)
+end
+
+unless opts[:datapointkey]
+  Trollop::die :datapointkey, 'Datapoint key is required'
+end
+unless opts[:unitaryauthority]
+  Trollop::die :unitaryauthority, 'Unitary authority required'
+end
+unless opts[:resolution]
+  Trollop::die :resolution, 'Resolution required'
+end
+unless opts[:output]
+  Trollop::die :output, 'Output required'
 end
 
 logger = Logger.new(STDOUT)
@@ -44,6 +62,7 @@ client = MetofficeDatapoint.new(api_key: datapoint_key)
 
 forecasts_capabilities = client.forecasts_capabilities(res: resolution)
 
+# TODO: check whether there any new forecasts to retrieve, aborting if not.
 logger.info forecasts_capabilities
 
 site_list = client.forecasts_sitelist
@@ -83,7 +102,19 @@ pool.shutdown
 
 logger.info 'Download done'
 
+nodes = []
+site_forecasts.each do |site_forecast|
+  # Don't know what DV stands for see
+  # http://www.metoffice.gov.uk/datapoint/product/uk-3hourly-site-specific-forecast/detailed-documentation
+  siteDv = site_forecast['SiteRep']['DV']
+  node = siteDv['Location']
+  # Rename the id key to what citysdk expects
+  node['id'] = node['i']
+  node.delete 'i'
+  nodes.push siteDv['Location']
+end
+
 File.open(output_file_path, 'w') do |file|
-  file.write(JSON.pretty_generate(site_forecasts))
+  file.write(JSON.pretty_generate(nodes))
 end
 

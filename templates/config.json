@@ -1,0 +1,6 @@
+{
+  "resolution": "3hourly",
+  "datapointkey": "YOUR_DATAPOINT_KEY",
+  "unitaryauthority": "Greater Manchester",
+  "output": "/tmp/met-office-data.json"
+}
