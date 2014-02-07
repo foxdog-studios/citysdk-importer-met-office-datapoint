@@ -2,5 +2,12 @@
   "resolution": "3hourly",
   "datapointkey": "YOUR_DATAPOINT_KEY",
   "unitaryauthority": "Greater Manchester",
-  "output": "/tmp/met-office-data.json"
+  "email": "big.bird@example.com",
+  "password": "your_password",
+  "url": "http://localhost:9292",
+  "layer": "yourdomain.metoffice",
+  "description": "Met office 5 day hourly forecast data",
+  "organization": "The Met Office",
+  "category": "natural.weather",
+  "webservice": "http://localhost:9295/met-office"
 }

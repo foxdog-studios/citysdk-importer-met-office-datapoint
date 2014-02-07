@@ -11,3 +11,14 @@ datapoint](http://www.metoffice.gov.uk/datapoint/product/uk-3hourly-site-specifi
 
 [CitySDK](http://dev.citysdk.waag.org/about)
 
+Config
+------
+
+Copy the config in `templates/config.json` and fill it in.
+
+Run
+---
+
+    ./scripts/run.sh --config config.json
+
+
