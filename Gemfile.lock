@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/foxdog-studios/citysdk-client
-  revision: 8ac72e1d0326e40e76982f68af19ce305a69c44b
+  revision: 94836d919f3fe6b21af526a08b221ee7da96eac6
   specs:
-    citysdk (0.1.2.1)
+    citysdk-client (0.1.2.1)
       addressable (~> 2.3.5)
       charlock_holmes (~> 0.6.9.4)
       dbf
@@ -42,7 +42,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  citysdk!
+  citysdk-client!
+  faraday
   metoffice_datapoint (~> 0.0.2)
   thread (~> 0.1.3)
   trollop (~> 2.0)

@@ -3,7 +3,8 @@ require 'json'
 require 'thread'
 require 'thread/pool'
 
-require 'citysdk'
+require 'citysdk/client'
+require 'faraday'
 require 'metoffice_datapoint'
 require 'trollop'
 
@@ -25,7 +26,12 @@ def main
   email = opts.fetch(:email)
   password = opts.fetch(:password)
 
-  api = CitySDK::API.new(url)
+  conn = Faraday.new(
+    url: url,
+    headers: { content_type: 'application/json' },
+    ssl: { verify: !opts.fetch(:do_not_verify_ssl) }
+  )
+  api = CitySDK::API.new(conn)
   api.set_credentials(email, password)
 
   layer = opts.fetch(:layer)
@@ -118,6 +124,8 @@ def parse_options
     opt(:config,
         'Configuration JSON file',
         :type => :string)
+    opt(:do_not_verify_ssl,
+        'Do not verify CitySDK SSL certificate')
     opt(:datapointkey,
         'Met Office datapoint key',
         :type => :string)
